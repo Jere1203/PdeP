@@ -107,13 +107,9 @@ conduceBienElectricidad sustancia = grupo sustancia == GasNoble || grupo sustanc
 union :: Sustancia -> String
 union sustancia
     | not $ esVocal $ last $ nombreElemento sustancia = nombreElemento sustancia ++ "uro" 
---    | otherwise =  
-
+    | otherwise = (++ "uro").filtrarVocal $ sustancia
 esVocal :: Char -> Bool
 esVocal letra = letra `elem` "aeiou"
 
 filtrarVocal :: Sustancia -> String
-filtrarVocal sustancia = takeWhile esVocal $ reverse $ nombreElemento sustancia
-
-modificarNombre :: [Char] -> String
-modificarNombre sustancia = 
+filtrarVocal sustancia = reverse.dropWhile esVocal.reverse $ nombreElemento sustancia
