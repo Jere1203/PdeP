@@ -113,3 +113,12 @@ esVocal letra = letra `elem` "aeiou"
 
 filtrarVocal :: Sustancia -> String
 filtrarVocal sustancia = reverse.dropWhile esVocal.reverse $ nombreElemento sustancia
+
+-- 4. Combinar 2 nombres. Al nombre de unión del primero lo concatenamos con el segundo, agregando un “ de “ entre 
+-- medio. Por ejemplo, si combino “cloro” y “sodio” debería obtener “cloruro de sodio”.
+combinar :: Sustancia -> Sustancia -> String
+combinar sustancia1 sustancia2 = union sustancia1 ++ " de " ++ nombreElemento sustancia2
+
+-- 5. Mezclar una serie de componentes entre sí. El resultado de dicha mezcla será un compuesto. Sus componentes 
+-- serán los componentes mezclados. El nombre se forma de combinar los nombres de la sustancia de cada componente. 
+-- La especie será, arbitrariamente, un no metal.
