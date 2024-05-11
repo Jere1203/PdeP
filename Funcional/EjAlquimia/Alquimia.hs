@@ -121,4 +121,4 @@ combinar sustancia1 sustancia2 = union sustancia1 ++ " de " ++ nombreElemento su
 
 -- 5. Mezclar una serie de componentes entre sí. El resultado de dicha mezcla será un compuesto. Sus componentes 
 -- serán los componentes mezclados. El nombre se forma de combinar los nombres de la sustancia de cada componente. 
--- La especie será, arbitrariamente, un no metal. agdkhjasdgkjh 
+-- La especie será, arbitrariamente, un no metal.
