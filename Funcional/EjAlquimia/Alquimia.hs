@@ -20,7 +20,6 @@ data Sustancia =
     }
     | Compuesto {
         nombreCompuesto :: String,
-        simboloCompuesto :: String,
         componentes :: [Componente],
         grupo :: Grupo
 } deriving(Eq, Show)
@@ -55,7 +54,6 @@ oxigeno = Elemento{
 agua :: Sustancia
 agua = Compuesto {
     nombreCompuesto = "Agua",
-    simboloCompuesto = "H2O",
     componentes = [Componente hidrogeno 2, Componente oxigeno 1],
     grupo = NoMetal
 }
@@ -122,3 +120,9 @@ combinar sustancia1 sustancia2 = union sustancia1 ++ " de " ++ nombreElemento su
 -- 5. Mezclar una serie de componentes entre sí. El resultado de dicha mezcla será un compuesto. Sus componentes 
 -- serán los componentes mezclados. El nombre se forma de combinar los nombres de la sustancia de cada componente. 
 -- La especie será, arbitrariamente, un no metal.
+mezclar :: [Componente] -> Sustancia
+mezclar componentes = Compuesto {
+    nombreCompuesto = foldl1 (combinar) $ map (nombreElemento.sustancia) componentes,
+    componentes = componentes,
+    grupo = NoMetal
+}
