@@ -50,10 +50,10 @@ agregarArtefacto :: Artefacto -> Heroe -> Heroe
 agregarArtefacto unArtefacto unHeroe = unHeroe {artefactos = unArtefacto : artefactos unHeroe}
 
 lanzaOlimpo :: Artefacto
-lanzaOlimpo = (Artefacto "Lanza del Olimpo" 100)
+lanzaOlimpo = Artefacto "Lanza del Olimpo" 100
 
 xiphos :: Artefacto
-xiphos = (Artefacto "Xiphos" 50)
+xiphos = Artefacto "Xiphos" 50
 
 encontrarArtefacto :: Artefacto -> Tarea
 encontrarArtefacto unArtefacto unHeroe = modificarReconocimiento (rareza unArtefacto) . agregarArtefacto unArtefacto $ unHeroe
@@ -61,12 +61,26 @@ encontrarArtefacto unArtefacto unHeroe = modificarReconocimiento (rareza unArtef
 modificarReconocimiento :: Int -> Heroe -> Heroe
 modificarReconocimiento incremento unHeroe = unHeroe {reconocimiento = reconocimiento unHeroe + incremento}
 
---escalarElOlimpo unHeroe = modificarReconocimiento 500 . filtrarMenoresAMil . triplicarRarezaArtefactos . agregarArtefacto relampagoDeZeus $ unHeroe
+modificarArtefacto :: ([Artefacto] -> [Artefacto]) -> Heroe -> Heroe
+modificarArtefacto f unHeroe = unHeroe {artefactos = f $ artefactos unHeroe}
+
+relampagoDeZeus :: Artefacto
+relampagoDeZeus = Artefacto "Relampago de Zeus" 500
+
+escalarElOlimpo :: Tarea
+escalarElOlimpo unHeroe = modificarReconocimiento 500 . desecharArtefactos . triplicarRarezaArtefactos . agregarArtefacto relampagoDeZeus $ unHeroe
+
+desecharArtefactos :: Heroe -> Heroe
+desecharArtefactos unHeroe = modificarArtefacto (filtrarMenoresAMil) unHeroe
 
 filtrarMenoresAMil :: [Artefacto] -> [Artefacto]
-filtrarMenoresAMil artefactos = filter ((<1000) . rareza) artefactos
+filtrarMenoresAMil artefactos = filter ((>1000) . rareza) artefactos
 
+triplicarRarezaArtefactos :: Heroe -> Heroe
+triplicarRarezaArtefactos unHeroe = modificarArtefacto (map triplicarRareza) $ unHeroe
 
+triplicarRareza :: Artefacto -> Artefacto
+triplicarRareza unArtefacto = unArtefacto {rareza = (*3) . rareza $ unArtefacto}
 
 ---------------
 --EJERCICIO 3--
