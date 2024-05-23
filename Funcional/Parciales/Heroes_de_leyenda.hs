@@ -82,6 +82,11 @@ triplicarRarezaArtefactos unHeroe = modificarArtefacto (map triplicarRareza) $ u
 triplicarRareza :: Artefacto -> Artefacto
 triplicarRareza unArtefacto = unArtefacto {rareza = (*3) . rareza $ unArtefacto}
 
+
+
+
+
+
 ---------------
 --EJERCICIO 3--
 ---------------
