@@ -14,24 +14,7 @@ type Tarea = Heroe -> Heroe
 data Artefacto = Artefacto{
     nombre :: String,
     rareza :: Int
-} deriving (Show)
-
-jere :: Heroe
-jere = Heroe {
-    epiteto = "",
-    reconocimiento = 1200,
-    artefactos = [],
-    tareas = []
-}
-
-pedro :: Heroe
-pedro = Heroe {
-    epiteto = "",
-    reconocimiento = 600,
-    artefactos = [],
-    tareas = []
-}
-
+} deriving (Show, Eq)
 
 ---------------
 --EJERCICIO 2--
@@ -54,6 +37,9 @@ lanzaOlimpo = Artefacto "Lanza del Olimpo" 100
 
 xiphos :: Artefacto
 xiphos = Artefacto "Xiphos" 50
+---------------
+--EJERCICIO 3--
+---------------
 
 encontrarArtefacto :: Artefacto -> Tarea
 encontrarArtefacto unArtefacto unHeroe = modificarReconocimiento (rareza unArtefacto) . agregarArtefacto unArtefacto $ unHeroe
@@ -82,11 +68,48 @@ triplicarRarezaArtefactos unHeroe = modificarArtefacto (map triplicarRareza) $ u
 triplicarRareza :: Artefacto -> Artefacto
 triplicarRareza unArtefacto = unArtefacto {rareza = (*3) . rareza $ unArtefacto}
 
+ayudarACruzarLaCalle :: Int -> Heroe -> Heroe
+ayudarACruzarLaCalle cantCuadras unHeroe = unHeroe {epiteto = "Gros" ++ replicate cantCuadras 'o'}
 
+matarUnaBestia :: Bestia -> Heroe -> Heroe
+matarUnaBestia unaBestia unHeroe
+    | debilidad unaBestia $ unHeroe = cambioEpiteto ("El asesino de " ++ nombreBestia unaBestia) $ unHeroe
+    | otherwise                              = cambioEpiteto "El cobarde" . modificarArtefacto (drop 1) $ unHeroe
 
+data Bestia = Bestia{
+    nombreBestia :: String,
+    debilidad :: Debilidad
+} deriving (Show)
 
-
+type Debilidad = Heroe -> Bool
 
 ---------------
---EJERCICIO 3--
+--EJERCICIO 4--
 ---------------
+
+heracles :: Heroe
+heracles = Heroe{
+    epiteto = "Guardian del Olimpo",
+    reconocimiento = 700,
+    artefactos = [pistolaGriega, relampagoDeZeus],
+    tareas = []
+}
+
+pistolaGriega :: Artefacto
+pistolaGriega = Artefacto{
+    nombre = "Pistola griega",
+    rareza = 1000
+}
+
+---------------
+--EJERCICIO 5--
+---------------
+
+matarLeonDeMemea :: Tarea
+matarLeonDeMemea unHeroe = matarUnaBestia (leonDeMemea) $ unHeroe
+
+leonDeMemea :: Bestia
+leonDeMemea = Bestia{
+    nombreBestia = "Leon de Memea",
+    debilidad = (>=20) . length . epiteto 
+}
