@@ -127,13 +127,6 @@ agregarTarea unaTarea unHeroe = unHeroe {tareas = unaTarea : tareas unHeroe}
 --EJERCICIO 7--
 ---------------
 
-mamani = Heroe{
-    epiteto = "Mani Games",
-    reconocimiento = 900,
-    artefactos = [lanzaOlimpo],
-    tareas = [matarLeonDeMemea]
-}
-
 presumirLogros :: Heroe -> Heroe -> (Heroe,Heroe)
 presumirLogros heroeUno heroeDos
     | gana heroeUno heroeDos = (heroeUno, heroeDos)
