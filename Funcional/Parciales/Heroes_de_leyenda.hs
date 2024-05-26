@@ -113,3 +113,61 @@ leonDeMemea = Bestia{
     nombreBestia = "Leon de Memea",
     debilidad = (>=20) . length . epiteto 
 }
+
+---------------
+--EJERCICIO 6--
+---------------
+
+hacerUnaTarea :: Tarea -> Heroe -> Heroe
+hacerUnaTarea unaTarea unHeroe = unaTarea $ unHeroe
+
+agregarTarea :: Tarea -> Heroe -> Heroe
+agregarTarea unaTarea unHeroe = unHeroe {tareas = unaTarea : tareas unHeroe}
+---------------
+--EJERCICIO 7--
+---------------
+
+mamani = Heroe{
+    epiteto = "Mani Games",
+    reconocimiento = 900,
+    artefactos = [lanzaOlimpo],
+    tareas = [matarLeonDeMemea]
+}
+
+presumirLogros :: Heroe -> Heroe -> (Heroe,Heroe)
+presumirLogros heroeUno heroeDos
+    | gana heroeUno heroeDos = (heroeUno, heroeDos)
+    | gana heroeDos heroeUno = (heroeDos, heroeUno)
+    | otherwise              = presumirLogros (hacerTareasDe heroeUno $ heroeDos) (hacerTareasDe heroeDos $ heroeUno)
+
+hacerTareasDe :: Heroe -> Heroe -> Heroe
+hacerTareasDe heroe1 heroe2 = realizarLabores (tareas heroe1) $ heroe2
+
+gana :: Heroe -> Heroe -> Bool
+gana heroe1 heroe2 = reconocimiento heroe1 > reconocimiento heroe2 || reconocimiento heroe1 == reconocimiento heroe2 && sumaRarezas heroe1 > sumaRarezas heroe2
+
+sumaRarezas :: Heroe -> Int
+sumaRarezas unHeroe = sum . map rareza . artefactos $ unHeroe
+---------------
+--EJERCICIO 8--
+---------------
+-- ¿Cuál es el resultado de hacer que presuman dos héroes con reconocimiento 100, ningún artefacto y
+-- ninguna tarea realizada?
+
+-- Nunca se sabe el resultado final ya que la función queda en un estado recursivo permanente ya que núnca se aproxima al caso base (permanece comparando reconocimiento y como ninguno tiene ninguna tarea para apliacar nunca cambian sus estados).
+
+---------------
+--EJERCICIO 9--
+---------------
+
+realizarLabores :: [Tarea] -> Heroe -> Heroe
+realizarLabores unasTareas unHeroe = foldl (flip hacerUnaTarea) unHeroe unasTareas
+
+---------------
+--EJERCICIO 10--
+---------------
+
+-- Si invocamos la función anterior con una labor infinita,
+-- ¿se podrá conocer el estado final del héroe? ¿Por qué?
+
+-- No, ya que nunca se llegará a un estado final del héroe ya que haskell solo muestra el estado final una vez aplicada la funcion.
