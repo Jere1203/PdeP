@@ -98,5 +98,8 @@ deltaExcursionSegun unIndice unTurista unaExcursion = deltaSegun stress unTurist
 
 --c)
 
---esExcursionEducativa :: Excursion -> Turista -> Bool
---esExcursionEducativa unaExcursion unTurista = 
+esExcursionEducativa :: Excursion -> Turista -> Bool
+esExcursionEducativa unaExcursion unTurista = (==1) $ deltaExcursionSegun (length . idiomas) unTurista unaExcursion
+
+esExcursionDesestresante :: Excursion -> Turista -> Bool
+esExcursionDesestresante unaExcursion unTurista = (==3) $ deltaExcursionSegun (stress) unTurista unaExcursion
