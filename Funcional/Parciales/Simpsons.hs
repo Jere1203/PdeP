@@ -80,6 +80,7 @@ irAVerAKrusty unPersonaje = (>=10) . dinero $ unPersonaje
 tristementeMillonario :: Logro
 tristementeMillonario unPersonaje = (not . alegrarse 100) unPersonaje && esMillonario unPersonaje
 
+--A)
 esActividadDecisiva :: Logro -> Personaje -> Actividad -> Bool
 esActividadDecisiva unLogro unPersonaje unaActividad = logroSinActividad == False && logroConActividad == True
 
@@ -87,6 +88,7 @@ esActividadDecisiva unLogro unPersonaje unaActividad = logroSinActividad == Fals
         logroConActividad = unLogro . unaActividad $ unPersonaje
         logroSinActividad = unLogro $ unPersonaje
 
+--B)
 buscaPrimeraDecisiva :: Personaje -> Logro -> [Actividad] -> Actividad
 buscaPrimeraDecisiva unPersonaje unLogro unasActividades = head listaDecisivas
 
