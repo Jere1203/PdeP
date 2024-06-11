@@ -88,18 +88,82 @@ hacerExcurion unaExcursion unTurista = bajaStress porcentajeStress . unaExcursio
         porcentajeStress = stress unTurista * 10 `div` 100
 
 --b)
-deltaSegun :: Indice -> Turista -> Excursion -> Int
-deltaSegun f algo1 algo2 = f algo1 - f (hacerExcurion algo2 $ algo1)
+deltaSegun :: (a -> Int) -> a -> a -> Int
+deltaSegun f algo1 algo2 = f algo1 - f algo2
 
 type Indice = Turista -> Int
 
 deltaExcursionSegun :: Indice -> Turista -> Excursion -> Int
-deltaExcursionSegun unIndice unTurista unaExcursion = deltaSegun stress unTurista unaExcursion
+deltaExcursionSegun unIndice unTurista unaExcursion = deltaSegun unIndice (hacerExcurion unaExcursion unTurista) unTurista
 
 --c)
 
 esExcursionEducativa :: Excursion -> Turista -> Bool
 esExcursionEducativa unaExcursion unTurista = (==1) $ deltaExcursionSegun (length . idiomas) unTurista unaExcursion
 
-esExcursionDesestresante :: Excursion -> Turista -> Bool
-esExcursionDesestresante unaExcursion unTurista = (==3) $ deltaExcursionSegun (stress) unTurista unaExcursion
+esExcursionDesestresante :: Turista -> Excursion -> Bool
+esExcursionDesestresante unTurista unaExcursion  = (==3) $ deltaExcursionSegun (stress) unTurista unaExcursion
+
+-----------
+--Punto 3--
+-----------
+
+type Tour = [Excursion]
+
+completo :: Tour
+completo = [salirAHablarUnIdioma "melmaquiano", salirACaminar 40, apreciarElementoPaisaje "cascada", salirACaminar 20]
+
+ladoB :: Excursion -> Tour
+ladoB unaExcursion = [salirACaminar 120, hacerExcurion unaExcursion, paseoEnBarco "tranquila"]
+
+islaVecina :: String -> Tour
+islaVecina unaMarea = [excursionSegunMarea unaMarea]
+
+excursionSegunMarea :: String -> Turista -> Turista
+excursionSegunMarea unaMarea unTurista
+    | unaMarea == "fuerte" = hacerExcurion (apreciarElementoPaisaje "lago") $ unTurista
+    | otherwise            = hacerExcurion irALaPLaya $ unTurista
+
+--a)
+hacerTour :: Tour -> Turista -> Turista
+hacerTour unTour unTurista = subeStress cantExcursiones . foldl (\x f -> f x) unTurista $ unTour
+
+    where
+        cantExcursiones = length unTour
+
+--b)
+esTourConvincente :: Turista -> [Tour] -> Bool
+esTourConvincente unTurista unosTours = any (esConvincente unTurista) unosTours
+
+esConvincente :: Turista -> Tour -> Bool
+esConvincente unTurista unTour = dejaAcompaniado . hacerTour tourDesestresante $ unTurista
+
+    where
+        tourDesestresante = filter (esExcursionDesestresante unTurista) unTour
+
+dejaAcompaniado :: Turista -> Bool
+dejaAcompaniado unTurista = (==False) . viajaSolo $ unTurista
+
+--c)
+
+efectividadTour :: Tour -> [Turista] -> Int
+efectividadTour unTour unosTuristas = sum . map (calculaEspiritualidad unTour) . filter (flip esConvincente unTour) $ unosTuristas
+
+calculaEspiritualidad :: Tour -> Turista -> Int
+calculaEspiritualidad unTour unTurista = deltaSegun espiritualidad (hacerTour unTour unTurista) unTurista
+
+espiritualidad :: Turista -> Int
+espiritualidad unTurista = stress unTurista + cansancio unTurista
+
+-----------
+--Punto 4--
+-----------
+--a)
+infinitasPlayas :: Tour
+infinitasPlayas = repeat irALaPLaya
+
+--b)
+-- Si aplico la funcion "esConvincente" con "infinitasPlayas" y "ana" como parámetros el intérprete de Haskell no concluye en ningún resultado,
+-- ya que núnca termina de analizar la lista de excursiones. Lo mismo ocurre si "pedro" es parámetro
+--c) Sí, si pasamos una lista vacía de turistas como argumento para la función esta nos devolverá un "0", esto es así debido a que Haskell utiliza
+-- "Lazy Evaluation" para calcular el resultado. Como se llega al resultado final (0) es en vano seguir evaluando los infinitos resultados.
