@@ -72,7 +72,7 @@ gemaDelAlma :: String -> Personaje -> Personaje
 gemaDelAlma unaHabilidad unPersonaje = quitarHabilidad unaHabilidad . bajaEnergia 10 $ unPersonaje
 
 quitarHabilidad :: String -> Personaje -> Personaje
-quitarHabilidad unaHabilidad unPersonaje = modHabilidades (dropWhile ((/=) unaHabilidad)) unPersonaje
+quitarHabilidad unaHabilidad unPersonaje = modHabilidades (dropWhile ((==) unaHabilidad)) unPersonaje
 
 modHabilidades :: ([String] -> [String]) -> Personaje -> Personaje
 modHabilidades f unPersonaje = unPersonaje {habilidades = f $ habilidades unPersonaje}
