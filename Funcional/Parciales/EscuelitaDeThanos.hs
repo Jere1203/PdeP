@@ -127,10 +127,10 @@ utilizar = foldl (\unPersonaje unasGemas -> unasGemas unPersonaje)
 type Gema = Habilidad
 
 gemaMasPoderosa :: Gemas -> Personaje -> Gema
-gemaMasPoderosa [unaGema] _= unaGema
+gemaMasPoderosa [unaGema] _ = unaGema
 gemaMasPoderosa (unaGema : otraGema : unasGemas) unPersonaje
-    | energia (unaGema unPersonaje) >= energia (otraGema unPersonaje) = gemaMasPoderosa (otraGema : unasGemas) $ unPersonaje
-    | otherwise                                                       = gemaMasPoderosa (unaGema : unasGemas) $ unPersonaje
+    | energia (unaGema unPersonaje) > energia (otraGema unPersonaje)  = gemaMasPoderosa (otraGema : unasGemas) unPersonaje
+    | otherwise                                                       = gemaMasPoderosa (unaGema : unasGemas)  unPersonaje
 
 -----------
 --Punto 7--
@@ -146,4 +146,4 @@ usoLasTresPrimerasGemas :: Guantelete -> Personaje -> Personaje
 usoLasTresPrimerasGemas guantelete = (flip utilizar . take 3. gemas) guantelete
 
 --Se puede ejecutar gemaMasPoderosa punisher guanteleteDeLocos ya que al utilizar lazy evaluation y siempre evaluar con las mismas gemas una vez alcanzado un valor final el interpreter deja de evaluar el resto de la lista.
---En el caso de "usoLasTresPrimerasGemas guanteleteDeLocos punisher" sucede algo similar solo que al acotar la cantidad de gemas a utilizar a tres simplemente evalua en esas tres, no interviene el concepto de lazy evaluation.
+--En el caso de "usoLasTresPrimerasGemas guanteleteDeLocos punisher" sucede algo similar solo que al acotar la cantidad de gemas a utilizar a tres simplemente evalua en esas tres por lazy evaluation.
