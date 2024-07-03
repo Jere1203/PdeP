@@ -48,8 +48,29 @@ medioHermanos(Simpson,OtroSimpson) :-
     compartenPadre(Simpson,OtroSimpson),
     not(compartenMadre(Simpson,OtroSimpson)).
 
-% tioDe(Simpson,OtroSimpson) :-    
+tioDe(Tio,Sobrino) :-
+    progenitor(Progenitor,Sobrino),
+    hermanos(Progenitor,Tio).
+tioDe(Tio,Sobrino) :-
+    progenitor(Progenitor,Sobrino),
+    medioHermanos(Progenitor,Tio).
 
+abueloMultiple(Abuelo) :-
+    nietoDe(Abuelo,Nieto),
+    hermanos(Nieto,Hermano),
+    Nieto \= Hermano.
+
+nietoDe(Abuelo,Nieto) :-
+    progenitor(Progenitor,Nieto),
+    progenitor(Abuelo,Progenitor).
+
+cuniadoDe(Simpson1,Cuniado) :-
+    conyugeDe(Simpson1,Conyuge),
+    hermanos(Conyuge,Cuniado).
+
+conyugeDe(Simpson1,Simpson2) :-
+    progenitor(Simpson1,Hijo),
+    progenitor(Simpson2,Hijo).
 
 progenitor(Padre,Hijo) :-
     padreDe(Padre,Hijo).
