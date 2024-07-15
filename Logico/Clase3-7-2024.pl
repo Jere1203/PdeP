@@ -5,7 +5,34 @@ pelicula(lalaLand,musical).
 pelicula(americanPsycho,thriller).
 pelicula(starWarsAmenazaFantasma,ciencaFiccion).
 pelicula(mentirasVerdaderas,comedia).
+pelicula(elResplandor, thriller).
+pelicula(cloverfield, thriller).
+pelicula(oppenheimer, drama).
+pelicula(toyStory, musical).
+pelicula(wallaceYGrommit, ciencaFiccion).
 
+%asesinato/3 (Pelicula, Asesino, Victima)
+asesinato(americanPsycho, patrickBateman, paulAllen).
+asesinato(elResplandor, jack, elJardinero).
+
+%cancion/2 (Pelicula, Cancion)
+cancion(toyStory, yoSoyTuAmigoFiel).
+cancion(toyStory, cambiosExtranios).
+cancion(toyStory, noNavegareNuncaMas).
+
+%anio/2 (Pelicula, Anio)
+anio(starWarsAmenazaFantasma, 3200).
+anio(wallaceYGrommit, 1989).
+
+%segmentos/2 (Pelicula, Segmento).
+segmentos(Pelicula, casorio).
+segmentos(Pelicula, funeral).
+segmentos(Pelicula, peleas).
+segmentos(Pelicula, mediosHermanos).
+segmentos(Pelicula, enganio).
+
+
+%critica/2 (Pelicula, Estrellas)
 critica(losVengadores,3).
 critica(lalaLand,5).
 critica(americanPsycho,4).
@@ -99,3 +126,40 @@ sonIguales(Puntaje, Puntaje).
 mejorCritica(Pelicula, MejorCritica):-
     critica(Pelicula,MejorCritica),
     forall(critica(Pelicula,Critica), MejorCritica >= Critica).
+
+culebronMexicano(Pelicula) :-
+    segmentos(Pelicula, casorio),
+    segmentos(Pelicula, mediosHermanos),
+    segmentos(Pelicula, funeral),
+    segmentos(Pelicula, peleas).
+
+futurista(Pelicula) :-
+    anio(Pelicula, Anio),
+    Anio >= 3000.
+
+puroSuspenso(Pelicula) :-
+    pelicula(Pelicula, thriller),
+    not(asesinato(Pelicula, _, _)).
+
+asesinoSerial(Pelicula, Asesino) :-
+    pelicula(Pelicula, thriller),
+    asesinato(Pelicula, Asesino, _),
+    forall(asesinato(Pelicula, OtroAsesino, _), sonElMismoAsesino(Asesino,OtroAsesino)).
+
+%asesinoSerialBis(Pelicula, Asesino) :-
+%    asesinato(Pelicula, Asesino, _),
+%    not(asesinato(Pelicula, OtroAsesino, _)),
+%    Asesino \= OtroAsesino.
+
+sonElMismoAsesino(Asesino, Asesino).
+
+slasher(Pelicula) :-
+    pelicula(Pelicula, thriller),
+    asesinatosDe(Pelicula, Cantidad),
+    Cantidad >= 5.
+
+asesinatosDe(Pelicula, Cantidad) :-
+    pelicula(Pelicula, thriller),
+    asesinato(Pelicula, UnAsesino, Victima),
+    findall(Victima, asesinato(Pelicula, UnAsesino, Victima), Victimas),
+    length(Victimas, Cantidad).
