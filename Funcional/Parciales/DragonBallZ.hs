@@ -45,33 +45,39 @@ esPoderoso unGuerrero = ki unGuerrero > 8000 || raza unGuerrero == Saiyajin
 type Ejercicio = GuerreroZ -> GuerreroZ
 
 pressDeBanca :: Ejercicio
-pressDeBanca = aumentaKi (90) . aumentaCansancio(100)
+pressDeBanca = sumarKi (90) . sumarCansancio(100)
 
-aumentaCansancio :: Float -> GuerreroZ -> GuerreroZ
-aumentaCansancio cantidadCansancio unGuerrero = unGuerrero {cansancio = max 0 (cantidadCansancio + cansancio unGuerrero)}
+sumarKi :: Float -> GuerreroZ -> GuerreroZ
+sumarKi cantidadKi = modificarKi (+cantidadKi)
 
-aumentaKi :: Float -> GuerreroZ -> GuerreroZ
-aumentaKi cantidadKi unGuerrero = unGuerrero {ki = cantidadKi + ki unGuerrero}
+sumarCansancio :: Float -> GuerreroZ -> GuerreroZ
+sumarCansancio cantidadCansancio = modificarCansancio (+cantidadCansancio)
+
+modificarCansancio :: (Float -> Float) -> GuerreroZ -> GuerreroZ
+modificarCansancio cantidadCansancio unGuerrero = unGuerrero {cansancio = max 0 (cantidadCansancio $ cansancio unGuerrero)}
+
+modificarKi :: (Float -> Float) -> GuerreroZ -> GuerreroZ
+modificarKi cantidadKi unGuerrero = unGuerrero {ki = cantidadKi $ ki unGuerrero}
 
 flexionesDeBrazo :: Ejercicio
-flexionesDeBrazo = aumentaCansancio (50)
+flexionesDeBrazo = sumarCansancio (50)
 
 saltosAlCajon :: Float -> Ejercicio
-saltosAlCajon medidaCajon =  aumentaCansancio (medidaCajon / 5) . aumentaKi(medidaCajon / 10)
+saltosAlCajon medidaCajon =  sumarCansancio (medidaCajon / 5) . sumarKi(medidaCajon / 10)
 
 snatch :: Ejercicio
 snatch unGuerrero
-    | esGuerreroExperimentado unGuerrero = aumentaKi (ki unGuerrero * 0.05) . aumentaCansancio(ki unGuerrero * 0.10) $ unGuerrero
-    | otherwise                          = aumentaCansancio (100) unGuerrero 
+    | esGuerreroExperimentado unGuerrero = sumarKi (ki unGuerrero * 0.05) . sumarCansancio(ki unGuerrero * 0.10) $ unGuerrero
+    | otherwise                          = sumarCansancio (100) unGuerrero 
 
 esGuerreroExperimentado :: GuerreroZ -> Bool
 esGuerreroExperimentado = (>= 22000) . ki
 
 estaCansado :: GuerreroZ -> Bool
-estaCansado unGuerrero = cansancio unGuerrero > ki unGuerrero * 0.44 && not (estaExhausto unGuerrero)
+estaCansado unGuerrero = (> porcentajeKi 44 unGuerrero) . cansancio $ unGuerrero
 
 estaExhausto :: GuerreroZ -> Bool
-estaExhausto unGuerrero = (> ki unGuerrero * 0.72) . cansancio $ unGuerrero
+estaExhausto unGuerrero = (> porcentajeKi 72 unGuerrero) . cansancio $ unGuerrero
 
 -----------
 --Punto 3--
@@ -79,39 +85,41 @@ estaExhausto unGuerrero = (> ki unGuerrero * 0.72) . cansancio $ unGuerrero
 
 realizaEjercicio :: Ejercicio -> GuerreroZ -> GuerreroZ
 realizaEjercicio unEjercicio unGuerrero
+    | estaExhausto unGuerrero = sumarKi (- porcentajeKi 20 unGuerrero) unGuerrero
     | estaCansado unGuerrero  = realizaEjercicioCansado unEjercicio unGuerrero
-    | estaExhausto unGuerrero = aumentaKi (- ki unGuerrero * 0.02) unGuerrero
     | otherwise               = unEjercicio unGuerrero
 
+porcentajeKi :: Float -> GuerreroZ -> Float
+porcentajeKi unPorcentaje unGuerrero = ki unGuerrero * (unPorcentaje/100)
+
 realizaEjercicioCansado :: Ejercicio -> GuerreroZ -> GuerreroZ
-realizaEjercicioCansado unEjercicio unGuerrero = aumentaKi alDoble . aumentaCansancio alCuadruple $ unGuerrero
+realizaEjercicioCansado unEjercicio unGuerrero = sumarKi alDoble . sumarCansancio alCuadruple $ unGuerrero
 
     where
-        alDoble     = (ki (unEjercicio unGuerrero) - ki unGuerrero) * 2
-        alCuadruple = (ki (unEjercicio unGuerrero) - ki unGuerrero) * 4
+        alDoble     = (diferenciaDeAtributo ki unGuerrero unEjercicio) * 2
+        alCuadruple = (diferenciaDeAtributo cansancio unGuerrero unEjercicio) * 4
+
+diferenciaDeAtributo :: (GuerreroZ -> Float) -> GuerreroZ -> Ejercicio -> Float
+diferenciaDeAtributo unAtributo unGuerrero unEjercicio = unAtributo (unEjercicio unGuerrero) - unAtributo unGuerrero
 
 -----------
 --Punto 4--
 -----------
-type Rutina = [(Ejercicio,TiempoDescanso)]
-type TiempoDescanso = Float
+type Rutina = [(Ejercicio, Descanso)]
+type Descanso = Float
 
-armarRutina :: GuerreroZ -> [Ejercicio] -> Rutina
-armarRutina unGuerrero unosEjercicios
-    | (==Sacado) . personalidad $ unGuerrero   = armaRutinaSacados unosEjercicios
-    | (==Perezoso) . personalidad $ unGuerrero = armaRutinaPerezosos unosEjercicios
-    | otherwise                                = []
+armarRutina' :: GuerreroZ -> [Ejercicio] -> Rutina
+armarRutina' (GuerreroZ _ _ _ _ Sacado)   unosEjercicios    = armaRutina unosEjercicios 0
+armarRutina' (GuerreroZ _ _ _ _ Perezoso) unosEjercicios    = armaRutina unosEjercicios 5
+armarRutina' (GuerreroZ _ _ _ _ _)        unosEjercicios    = []
 
-armaRutinaSacados :: [Ejercicio] -> Rutina
-armaRutinaSacados unosEjercicios = zip (unosEjercicios) (repeat 0)
+armaRutina :: [Ejercicio] -> Float -> Rutina
+armaRutina unosEjercicios tiempoDescanso = zip (unosEjercicios) (repeat tiempoDescanso)
 
-armaRutinaPerezosos :: [Ejercicio] -> Rutina
-armaRutinaPerezosos unosEjercicios = zip (unosEjercicios) (repeat 5)
+--rutinaInfinita :: Ejercicio -> Rutina
+--rutinaInfinita unEjercicio = armarRutina gohan (repeat unEjercicio)
 
-rutinaInfinita :: Ejercicio -> Rutina
-rutinaInfinita unEjercicio = armarRutina gohan (repeat unEjercicio)
-
--- Haskell al utilizar Lazy Evaluation no requiere inferir una lista completa para poder operar sobre ella, por ejemplo, si utilizasemos la funcion
+-- Haskell al utilizar Lazy Evaluation no requiere evaluar una lista completa para poder operar sobre ella, por ejemplo, si utilizasemos la funcion
 -- "head", "!!" o incluso "take" podriamos obtener un valor definitivo sin mayor inconveniente.
 
 -----------
@@ -121,8 +129,8 @@ rutinaInfinita unEjercicio = armarRutina gohan (repeat unEjercicio)
 serieDeEjercicios :: Rutina -> [Ejercicio]
 serieDeEjercicios = map fst
 
-realizaRutina :: Rutina -> GuerreroZ -> GuerreroZ
-realizaRutina unaRutina unGuerrero = foldl (flip realizaEjercicio) unGuerrero (serieDeEjercicios unaRutina)
+realizaRutina :: GuerreroZ -> Rutina-> GuerreroZ
+realizaRutina unGuerrero unaRutina  = foldl (flip realizaEjercicio) unGuerrero $ serieDeEjercicios unaRutina
 
 
 -----------
@@ -130,11 +138,13 @@ realizaRutina unaRutina unGuerrero = foldl (flip realizaEjercicio) unGuerrero (s
 -----------
 
 descansar :: Float -> GuerreroZ -> GuerreroZ
-descansar unosMinutos unGuerrero = aumentaCansancio (- puntosDeDescanso unosMinutos) unGuerrero
+descansar unosMinutos unGuerrero = sumarCansancio (- puntosDeDescanso) unGuerrero
+    where
+        puntosDeDescanso = calcularPuntosDeDescanso unosMinutos
 
-puntosDeDescanso :: Float -> Float
-puntosDeDescanso 0 = 0
-puntosDeDescanso unosMinutos = unosMinutos + puntosDeDescanso(unosMinutos - 1)
+calcularPuntosDeDescanso :: Float -> Float
+calcularPuntosDeDescanso 0 = 0
+calcularPuntosDeDescanso unosMinutos = unosMinutos + calcularPuntosDeDescanso(unosMinutos - 1)
 
 -----------
 --Punto 7--
@@ -143,4 +153,4 @@ puntosDeDescanso unosMinutos = unosMinutos + puntosDeDescanso(unosMinutos - 1)
 cantidadOptimaDeMinutos :: GuerreroZ -> Float
 cantidadOptimaDeMinutos unGuerrero
     | not . estaCansado $ unGuerrero = 0
-    | otherwise                      = last $ takeWhile (estaCansado . flip descansar unGuerrero) [1..]
+    | otherwise                      = head $ filter (not . estaCansado . flip descansar unGuerrero) [0..]
