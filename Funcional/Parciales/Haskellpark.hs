@@ -5,9 +5,9 @@ data Atraccion = Atraccion{
     nombre :: String,
     alturaMinima :: Float,
     duracion :: Duracion,
-    puntuacion :: Float,
     criticas :: Criticas,
-    reparaciones :: Reparaciones
+    reparaciones :: Reparaciones,
+    mantenimiento :: Bool
 }
 type Criticas = [String]
 type Duracion = Float
@@ -18,46 +18,38 @@ type Tarea = Atraccion -> Atraccion
 --Punto 1--
 -----------
 
-puntuarAtraccion :: Atraccion -> Atraccion
+puntuarAtraccion :: Atraccion -> Float
 puntuarAtraccion unaAtraccion
-    | duracionMayorA 10 unaAtraccion          = asignarPuntuacion 100 $ unaAtraccion
-    | menosDe 3 . reparaciones $ unaAtraccion = asignarPuntuacion (longitudNombre * 10 + cantidadOpiniones * 2) $ unaAtraccion
-    | otherwise                               = asignarPuntuacion (alturaMinima unaAtraccion * 10) $ unaAtraccion
+    | duracionMayorA 10 unaAtraccion                       = 100
+    | menosDeNReparaciones 3 . reparaciones $ unaAtraccion = (longitudNombre * 10 + cantidadOpiniones * 2)
+    | otherwise                                            = (alturaMinima unaAtraccion * 10)
     where
-        longitudNombre = genericLength . nombre $ unaAtraccion
+        longitudNombre    = genericLength . nombre $ unaAtraccion
         cantidadOpiniones = genericLength . criticas $ unaAtraccion
 
 duracionMayorA :: Duracion -> Atraccion -> Bool
 duracionMayorA unaDuracion = (> unaDuracion) . duracion
 
-menosDe :: Int -> Reparaciones -> Bool
-menosDe unaCantidad = (<unaCantidad) . length 
-
-asignarPuntuacion :: Float -> Atraccion -> Atraccion
-asignarPuntuacion unaPuntuacion unaAtraccion = unaAtraccion{puntuacion = unaPuntuacion}
+menosDeNReparaciones :: Int -> Reparaciones -> Bool
+menosDeNReparaciones unaCantidad = (<unaCantidad) . length 
 
 -----------
 --Punto 2--
 -----------
 
-estaEnMantenimiento :: Atraccion -> Bool
-estaEnMantenimiento unaAtraccion = not . null . reparaciones $ unaAtraccion
-
 quitarUltimaTarea :: Atraccion -> Atraccion
 quitarUltimaTarea = modificarTareas init
 
 modificarTareas :: (Reparaciones -> Reparaciones) -> Atraccion -> Atraccion
-modificarTareas reparacion unaAtraccion = unaAtraccion {reparaciones = reparacion $ reparaciones unaAtraccion}
+modificarTareas unaTarea unaAtraccion = unaAtraccion {reparaciones = unaTarea $ reparaciones unaAtraccion}
 
-type Mantenimento = Atraccion -> Atraccion
-
-ajustarTornilleria :: Float -> Mantenimento
-ajustarTornilleria cantidadTornillos unaAtraccion = modificarDuracion (+ min 10 cantidadTornillos) $ unaAtraccion
+ajustarTornilleria :: Float -> Tarea
+ajustarTornilleria cantidadTornillos unaAtraccion = modificarDuracion (min 10 . (+) cantidadTornillos) $ unaAtraccion
 
 modificarDuracion :: (Float -> Float) -> Atraccion -> Atraccion
 modificarDuracion cantidadDeDuracion unaAtraccion = unaAtraccion{duracion = cantidadDeDuracion $ duracion unaAtraccion}
 
-realizarEngrase :: Float -> Mantenimento
+realizarEngrase :: Float -> Tarea
 realizarEngrase gramosDeGrasa unaAtraccion = agregarOpinion "Para Valientes" . modificarAlturaMinima (+alturaPorGramosDeGrasa) $ unaAtraccion
 
     where
@@ -69,21 +61,19 @@ agregarOpinion unaOpinion unaAtraccion = unaAtraccion{criticas = unaOpinion : cr
 modificarAlturaMinima :: (Float -> Float) -> Atraccion -> Atraccion
 modificarAlturaMinima unaAltura unaAtraccion = unaAtraccion{alturaMinima = unaAltura $ alturaMinima unaAtraccion}
 
-mantenimientoElectrico :: Mantenimento
-mantenimientoElectrico = modificarCriticas
+mantenimientoElectrico :: Tarea
+mantenimientoElectrico unaAtraccion = unaAtraccion{criticas = take 2 . criticas $ unaAtraccion}
 
-modificarCriticas :: Atraccion -> Atraccion
-modificarCriticas unaAtraccion = unaAtraccion{criticas = reverse . drop todasMenosDos . reverse . criticas $ unaAtraccion}
-    where
-        todasMenosDos = (length $ criticas unaAtraccion) - 2
-
-mantenimientoBasico :: Mantenimento
+mantenimientoBasico :: Tarea
 mantenimientoBasico = ajustarTornilleria 8 . realizarEngrase 10
 
-realizarMantenimiento :: Mantenimento -> Atraccion -> Atraccion
+realizarMantenimiento :: Tarea -> Atraccion -> Atraccion
 realizarMantenimiento tareaDeMantenimiento unaAtraccion
     | estaEnMantenimiento unaAtraccion = quitarUltimaTarea . tareaDeMantenimiento $ unaAtraccion
     | otherwise                        = unaAtraccion
+
+estaEnMantenimiento :: Atraccion -> Bool
+estaEnMantenimiento = (==True) . mantenimiento
 
 -----------
 --Punto 3--
@@ -107,19 +97,23 @@ disneyNoEsistis = all (null . reparaciones) . filter ((>5) . genericLength . nom
 --Punto 4--
 -----------
 
-tieneReparacionesPiolas :: [Mantenimento] -> Atraccion -> Bool
-tieneReparacionesPiolas [] _                = False
-tieneReparacionesPiolas (x:xs) unaAtraccion = mejorQueAntes && tieneReparacionesPiolas xs unaAtraccion
+tieneReparacionesPiolas :: Atraccion -> Bool
+tieneReparacionesPiolas unaAtraccion
+    | not . null . reparaciones $ unaAtraccion = mejorQueAntes && tieneReparacionesPiolas (modificarTareas (drop 1) unaAtraccion)
+    | otherwise                                = True
 
     where
-        mejorQueAntes = (puntuacion . realizarMantenimiento x $ unaAtraccion) > (puntuacion unaAtraccion)
+        mejorQueAntes = (puntuarAtraccion . realizarMantenimiento (head . listaDeTareas $ unaAtraccion) $ unaAtraccion) > (puntuarAtraccion unaAtraccion)
+
+listaDeTareas :: Atraccion -> [Tarea]
+listaDeTareas = map fst . reparaciones
 
 -----------
 --Punto 5--
 -----------
 
-realizarTrabajosDeMantenimiento :: [Mantenimento] -> Atraccion -> Atraccion
-realizarTrabajosDeMantenimiento unasTareas unaAtraccion = foldl (flip realizarMantenimiento) unaAtraccion unasTareas
+realizarTrabajosDeMantenimiento :: Atraccion -> Atraccion
+realizarTrabajosDeMantenimiento unaAtraccion = foldl (flip realizarMantenimiento) unaAtraccion (listaDeTareas unaAtraccion)
 
 -----------
 --Punto 6--
