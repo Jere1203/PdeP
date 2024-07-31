@@ -8,7 +8,8 @@ data Atraccion = Atraccion{
     criticas :: Criticas,
     reparaciones :: Reparaciones,
     mantenimiento :: Bool
-}
+} deriving(Show,Eq)
+
 type Criticas = [String]
 type Duracion = Float
 type Reparaciones = [(Tarea, Duracion)]
