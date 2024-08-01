@@ -13,6 +13,7 @@ data Pokemon = Pokemon{
 data TipoPokemon = Electrico | Normal | Fuego deriving (Show)
 
 type Rutina = Pokemon -> Pokemon
+type Actividad = Rutina
 
 pikachu = Pokemon "Pikachu" Electrico 55 38 [(usarCaminadora 1 10)] ["Impactrueno","Placaje Electrico"]
 
@@ -21,7 +22,7 @@ snorlax = Pokemon "Snorlax" Normal 30 80 [(dormirLaSiesta 10),(levantarPesas 30)
 -----------
 --Punto 2--
 -----------
-dormirLaSiesta :: Float -> Rutina
+dormirLaSiesta :: Float -> Actividad
 dormirLaSiesta cantidadHoras unPokemon
     | cantidadHoras < 5 = modificarFuerza (+ cantidadFuerza) unPokemon
     | otherwise         = modificarNivel (subtract 1) unPokemon
@@ -29,24 +30,25 @@ dormirLaSiesta cantidadHoras unPokemon
         cantidadFuerza = 10 * cantidadHoras
 
 modificarFuerza :: (Float -> Float) -> Pokemon -> Pokemon
-modificarFuerza cuantaFuerza unPokemon = unPokemon {fuerza = cuantaFuerza $ fuerza unPokemon}
+modificarFuerza unaFuncion unPokemon = unPokemon {fuerza = unaFuncion $ fuerza unPokemon}
 
 modificarNivel :: (Float -> Float) -> Pokemon -> Pokemon
-modificarNivel cuantoNivel unPokemon = unPokemon {nivel = cuantoNivel $ nivel unPokemon}
+modificarNivel unaFuncion unPokemon = unPokemon {nivel = unaFuncion $ nivel unPokemon}
 
-usarCaminadora :: Float -> Float -> Rutina
-usarCaminadora cantidadMinutos unaVelocidad = modificarFuerza (+ velocidadPorCadaQuinceMinutos)
+aumentarFuerza :: Float -> Pokemon -> Pokemon
+aumentarFuerza cantidadFuerza = modificarFuerza (+ cantidadFuerza)
+
+usarCaminadora :: Float -> Float -> Actividad
+usarCaminadora cantidadMinutos unaVelocidad = aumentarFuerza velocidadPorCadaQuinceMinutos
     where
         velocidadPorCadaQuinceMinutos = (cantidadMinutos / 15) * unaVelocidad
 
-levantarPesas :: Float -> Rutina
+levantarPesas :: Float -> Actividad
 levantarPesas pesoMancuernas unPokemon
-    | pesoMancuernas < fuerza unPokemon = modificarNivel(+1) . modificarFuerza (+ pesoMancuernas) $ unPokemon
-    | otherwise                         = modificarFuerza (subtract diezPorcientoDeFuerza) $ unPokemon
-    where
-        diezPorcientoDeFuerza = fuerza unPokemon * 0.9
+    | pesoMancuernas < fuerza unPokemon = modificarNivel(+1) . aumentarFuerza pesoMancuernas $ unPokemon
+    | otherwise                         = modificarFuerza (* 0.9) $ unPokemon
 
-darUnPaseo :: Rutina
+darUnPaseo :: Actividad
 darUnPaseo unPokemon = unPokemon
 
 -----------
@@ -60,16 +62,13 @@ agregarHabilidad :: String -> Pokemon -> Pokemon
 agregarHabilidad unaHabilidad = modificarHabilidades (unaHabilidad :)
 
 modificarHabilidades :: ([String] -> [String]) -> Pokemon -> Pokemon
-modificarHabilidades f unPokemon = unPokemon {habilidades = f $ habilidades unPokemon}
+modificarHabilidades unaFuncion unPokemon = unPokemon {habilidades = unaFuncion $ habilidades unPokemon}
 
 rutinaTranqui :: Rutina
 rutinaTranqui = limpiarHabilidades . darUnPaseo . dormirLaSiesta 2
 
 limpiarHabilidades :: Pokemon -> Pokemon
-limpiarHabilidades unPokemon = modificarHabilidades (drop cantidadTotalDeHabilidades) unPokemon
-
-    where
-        cantidadTotalDeHabilidades = length . habilidades $ unPokemon
+limpiarHabilidades = modificarHabilidades (const [])
 
 nuevaRutina :: Rutina
 nuevaRutina unPokemon = dormirLaSiesta 3. darUnPaseo . agregarHabilidad "Placaje" . modificarFuerza (+ 10) $ unPokemon --No termino de entender como armar un ejercicio sin utilizar funciones auxiliares
@@ -84,24 +83,27 @@ realizarRutinas unasRutinas unPokemon = foldl (\unPokemon unasRutinas -> unasRut
 realizarRutinaEnGrupo :: Rutina -> [Pokemon] -> [Pokemon]
 realizarRutinaEnGrupo unaRutina = map unaRutina
 
-listarPokemonesPotentes :: Float -> Rutina -> [Pokemon] -> [Pokemon]
-listarPokemonesPotentes unPoderDeCombate unaRutina unosPokemones = filter ((<) unPoderDeCombate . calcularPoderDeCombatePokemon) . realizarRutinaEnGrupo unaRutina $ unosPokemones
+pokemonesPotentes :: Float -> Rutina -> [Pokemon] -> [Pokemon]
+pokemonesPotentes unPoderDeCombate unaRutina unosPokemones = filter ((<) unPoderDeCombate . poderDeCombate) . realizarRutinaEnGrupo unaRutina $ unosPokemones
 
-calcularPoderDeCombatePokemon :: Pokemon -> Float
-calcularPoderDeCombatePokemon unPokemon = (nivel unPokemon + fuerza unPokemon) / 2
+poderDeCombate :: Pokemon -> Float
+poderDeCombate unPokemon = (nivel unPokemon + fuerza unPokemon) / 2
+
+estanOrdenadosSegunFuerza :: [Pokemon] -> Bool
+estanOrdenadosSegunFuerza = quedanOrdenadosSegunFuerza . realizarRutinaEnGrupo superEntrenamientoYRutinaTranqui
 
 quedanOrdenadosSegunFuerza :: [Pokemon] -> Bool
 quedanOrdenadosSegunFuerza []                                    = True
-quedanOrdenadosSegunFuerza (unPokemon:otroPokemon:unosPokemones) = fuerza (realizarSuperEntrenamientoYRutinaTranqui unPokemon) < fuerza (realizarSuperEntrenamientoYRutinaTranqui otroPokemon) && quedanOrdenadosSegunFuerza unosPokemones
+quedanOrdenadosSegunFuerza (unPokemon:otroPokemon:unosPokemones) = fuerza unPokemon < fuerza otroPokemon && quedanOrdenadosSegunFuerza unosPokemones
 
-realizarSuperEntrenamientoYRutinaTranqui :: Pokemon -> Pokemon
-realizarSuperEntrenamientoYRutinaTranqui = superEntrenamiento . rutinaTranqui
+superEntrenamientoYRutinaTranqui :: Pokemon -> Pokemon
+superEntrenamientoYRutinaTranqui = superEntrenamiento . rutinaTranqui
 
 -----------
 --Punto 5--
 -----------
 
-charmander = Pokemon "Charmander" Fuego 30 40 (repeat superEntrenamiento) []
+charmander = Pokemon "Charmander" Fuego 30 40 (repeat (usarCaminadora 1 20)) []
 
 -- El pokemon modelado arriba puede realizar las rutinas, ya que unicamente se modificarian sus estadisticas mas no la lista infinita de rutina, y como haskell utiliza lazy evaluation
 -- no requiere evaluar los datos que no son solicitados.
