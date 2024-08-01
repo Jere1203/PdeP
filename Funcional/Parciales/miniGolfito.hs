@@ -139,10 +139,9 @@ padresQueNoGanaron unosParticipantes = listaDePadres . listaDePerdedores $ unosP
 listaDePerdedores :: Participantes -> Participantes
 listaDePerdedores unosParticipantes = filter (not . gana) $ unosParticipantes
 
-gana :: Participantes -> Bool
-gana unosParticipantes = 
 
-puntos :: Participantes -> [Puntos]
+
+puntos :: Participante -> Puntos
 puntos = snd
 
 listaDePadres :: Participantes -> [String]
