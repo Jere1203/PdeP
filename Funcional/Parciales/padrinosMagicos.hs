@@ -8,28 +8,24 @@ import Text.Show.Functions
 data Chico = Chico{
     nombre :: String,
     edad :: Int,
-    habilidades :: Habilidades,
+    habilidades :: [Habilidad],
     deseos :: Deseos
 } deriving(Show)
 
-type Habilidades = [String]
 type Habilidad = String
 type Deseos = [Deseo]
 type Deseo = Chico -> Chico
 
 timmy = Chico "Timmy" 10 ["mirar television", "jugar en la pc"] [serMayor]
 
-aprenderHabilidades :: Habilidades -> Deseo
-aprenderHabilidades habilidades = agregarHabilidades habilidades --Aplicacion parcial para ganar expresividad
-
-agregarHabilidades :: [String] -> Chico -> Chico
-agregarHabilidades habilidades = modificarHabilidades (habilidades ++) --Aplicacion parcial para ganar expresividad
+aprenderHabilidades :: [Habilidad] -> Chico -> Chico
+aprenderHabilidades habilidades = modificarHabilidades (habilidades ++) --Aplicacion parcial para ganar expresividad
 
 modificarHabilidades :: ([String] -> [String]) -> Chico -> Chico --Orden superior ya que recibe una funcion de lista de strings por parámetro
 modificarHabilidades unaFuncion unChico = unChico {habilidades = unaFuncion $ habilidades unChico} 
 
 serGrosoEnNeedForSpeed :: Deseo
-serGrosoEnNeedForSpeed =  agregarHabilidades . map serGrosoNVeces $ [1..]
+serGrosoEnNeedForSpeed =  aprenderHabilidades . map serGrosoNVeces $ [1..]
 --Lista infinita para agregar infinitas habilidades de "jugar need for speed" y composicion para ganar expresividad
 --Si llamamos a la funcion "serGrosoEnNeedForSpeed" con un chico como argumento la misma nos generara otro chico con las habilidades "jugar need for speed 1" hasta infinitos "jugar need for speed x", siendo x el numero siguiente
 --Se utilizo la lista infinita para ayudar a agregar las habilidades de jugar todos los need for speed anteriores y posteriores.
@@ -50,28 +46,19 @@ wanda :: Chico -> Chico
 wanda  = hacerMadurar . cumplirPrimerDeseo --Aplicacion parcial y composicion para ganar expresividad
 
 cumplirPrimerDeseo :: Chico -> Chico
-cumplirPrimerDeseo unChico = cumplirDeseo (primerDeseo unChico) unChico
+cumplirPrimerDeseo unChico = (primerDeseo unChico) $ unChico
 
 primerDeseo :: Chico -> Deseo
 primerDeseo = head . deseos --Aplicacion parcial y composicion para ganar expresividad
-
-cumplirDeseo :: Deseo -> Chico -> Chico
-cumplirDeseo unDeseo = unDeseo --Aplicacion parcial para ganar expresividad
 
 hacerMadurar :: Chico -> Chico
 hacerMadurar = modificarEdad (+1) --Aplicacion parcial para ganar expresividad
 
 cosmo :: Chico -> Chico
-cosmo = hacerDesmadurar --Aplicacion parcial para ganar expresividad
-
-hacerDesmadurar :: Chico -> Chico
-hacerDesmadurar = modificarEdad (flip div 2) --Aplicacion parcial para ganar expresividad
+cosmo = modificarEdad (flip div 2) --Aplicacion parcial para ganar expresividad
 
 muffinMagico :: Chico -> Chico
-muffinMagico = cumplirDeseos --Aplicacion parcial
-
-cumplirDeseos :: Chico -> Chico
-cumplirDeseos unChico = foldl (flip cumplirDeseo) unChico (deseos unChico) --Orden superior, ya que la funcion "foldl" recibe otra funcion por parámetro
+muffinMagico unChico = foldl (\unChico unDeseo -> unDeseo unChico) unChico (deseos unChico) --Aplicacion parcial
 
 -- ==================================================Parte B========================================
 
@@ -80,13 +67,10 @@ cumplirDeseos unChico = foldl (flip cumplirDeseo) unChico (deseos unChico) --Ord
 -----------
 
 tieneHabilidad :: Habilidad -> Chico -> Bool
-tieneHabilidad unaHabilidad = any (== unaHabilidad) . habilidades --Composicion y aplicacion parcial
+tieneHabilidad unaHabilidad = elem  unaHabilidad . habilidades --Composicion y aplicacion parcial
 
 esSuperMaduro :: Chico -> Bool
-esSuperMaduro unChico = edad unChico > 18 && sabeManejar unChico
-
-sabeManejar :: Chico -> Bool
-sabeManejar = any (== "manejar") . habilidades --Aplicacion parcial y composicion
+esSuperMaduro unChico = edad unChico > 18 && tieneHabilidad "manejar" unChico
 
 -----------
 --Punto 2--
@@ -101,22 +85,21 @@ type Condicion = Chico -> Bool
 
 trixie = Chica "Trixie Tang" noEsTimmy
 
-vicky = Chica "Vicky" condicionVicky
+vicky = Chica "Vicky" esSuperModeloNoruego
 
-condicionVicky :: Condicion
-condicionVicky = tieneHabilidad "ser un supermodelo noruego" -- Aplicacion parcial
+esSuperModeloNoruego :: Condicion
+esSuperModeloNoruego = tieneHabilidad "ser un supermodelo noruego" -- Aplicacion parcial
 
 noEsTimmy :: Chico -> Bool
 noEsTimmy unChico = nombre unChico /= "Timmy"
 
 quienConquistaA :: Chica -> [Chico] -> Chico
-quienConquistaA unaChica losPretendientes
-    | quedaUnUnicoPretendiente                         = last losPretendientes
-    | cumpleConLaCondicion unaChica primerPretendiente = primerPretendiente
-    | otherwise                                        = quienConquistaA unaChica (tail losPretendientes)
-    where
-        primerPretendiente = head losPretendientes
-        quedaUnUnicoPretendiente = length losPretendientes == 1
+quienConquistaA unaChica [unPretendiente] = unPretendiente
+quienConquistaA unaChica (unPretendiente:otrosPretendientes)
+    | cumpleConLaCondicion unaChica unPretendiente = unPretendiente
+    | otherwise                                    = quienConquistaA unaChica otrosPretendientes
+
+
 
 cumpleConLaCondicion :: Chica -> Chico -> Bool
 cumpleConLaCondicion unaChica = condicion unaChica --Aplicacion parcial
@@ -127,7 +110,7 @@ ejemplo = Chica "Ejemplo" sabeCocinar
 --quienConquistaA ejemplo [timmy,ejemplo2] = ejemplo2, ya que entre sus habilidades se encuentra "cocinar"
 
 sabeCocinar :: Condicion
-sabeCocinar = any (== "cocinar") . habilidades --Aplicacion parcial y composicion
+sabeCocinar = tieneHabilidad "cocinar" --Aplicacion parcial y composicion
 
 -- =======================================================PARTE C=======================================================0
 
@@ -135,20 +118,22 @@ sabeCocinar = any (== "cocinar") . habilidades --Aplicacion parcial y composicio
 --Punto 1--
 -----------
 
-ejemplo2 = Chico "Ejemplo 2" 10 ["cocinar","jugar need for speed","ver la tele","jugar a la pc","hablar ingles","ser un supermodelo noruego"] [dominarElMundo]
+ejemplo2 = Chico "Ejemplo 2" 10 ["cocinar","jugar need for speed","ver la tele","jugar a la pc","hablar ingles","ser un supermodelo noruego"] [dominarElMundo, serGrosoEnNeedForSpeed]
 
 dominarElMundo :: Deseo
-dominarElMundo = agregarHabilidades ["dominar el mundo"] --Aplicacion parcial
+dominarElMundo = aprenderHabilidades ["dominar el mundo"] --Aplicacion parcial
 
 infractoresDeDaRules :: [Chico] -> [Chico]
 infractoresDeDaRules chicos = filter (tieneDeseoProhibido) chicos
 
 tieneDeseoProhibido :: Chico -> Bool
-tieneDeseoProhibido = hayHabilidadProhibida . primerasCincoHabilidades . cumplirDeseos --Composicion y aplicacion parcial
+tieneDeseoProhibido unChico = any (esDeseoProhibido unChico) $ (deseos unChico) 
 
-hayHabilidadProhibida :: Chico -> Bool
-hayHabilidadProhibida unChico = tieneHabilidad "enamorar" unChico || tieneHabilidad "matar" unChico || tieneHabilidad "dominar el mundo" unChico
+esDeseoProhibido :: Chico -> Deseo -> Bool
+esDeseoProhibido unChico unDeseo = any (habilidadProhibida) . take 5 . habilidades . unDeseo $ unChico --Composicion y aplicacion parcial
 
-primerasCincoHabilidades :: Chico -> Chico
-primerasCincoHabilidades = modificarHabilidades (take 5) --Aplicacion parcial
+habilidadProhibida :: Habilidad -> Bool
+habilidadProhibida habilidad = elem habilidad habilidadesProhibidas
 
+habilidadesProhibidas :: [Habilidad]
+habilidadesProhibidas = ["enamorar","matar","dominar el mundo"]
