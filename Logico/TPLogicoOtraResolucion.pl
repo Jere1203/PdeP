@@ -55,3 +55,24 @@ alcanzoTecnologia(Civilizacion, Tecnologia) :-
 
 desarrolloTecnologico(Civilizacion, Tecnologias) :-
     forall(member(Tecnologia, Tecnologias),alcanzoTecnologia(Civilizacion, Tecnologia)).
+
+%Parte 2
+
+unidades(ana, tropa(jinete, caballo)).
+unidades(ana, tropa(piqueroNivel1)).
+unidades(ana, tropa(piqueroNivel2)).
+
+unidades(beto, tropa(campeon, 100)).
+unidades(beto, tropa(campeon, 80)).
+unidades(beto, tropa(piqueroNivel1, escudo)).
+unidades(beto, tropa(jinete, camello)).
+
+unidades(carola, tropa(piqueroNivel3)).
+unidades(carola, tropa(piqueroNivel2, escudo)).
+
+%unidadConMasVida(Jugador) :-
+%    unidades(Jugador, Tropas),
+
+cantidadDeVida(Tropa, Cantidad).
+cantidadDeVida(jineteACaballo, 90).
+cantidadDeVida(jineteACamello, 80).
