@@ -1,2 +1,1 @@
-# PdeP_Funcional
-# TP1
+# Parciales y ejercicios de PdeP
