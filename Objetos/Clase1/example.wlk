@@ -6,10 +6,14 @@ object francoColapinto{
   }
 
   method correr(kilometros) {
-    peso = peso - kilometros / 50
+    self.perderPeso(kilometros)
     auto.correr(kilometros)
   }
   
+  method perderPeso(kilometros) {
+    peso = peso - kilometros / 50
+  }
+
   //Getter
   method peso() {
     return peso
@@ -24,7 +28,11 @@ object francoColapinto{
 object williams {
   var nafta = 100
   method correr(kilometros){
-    nafta = nafta - kilometros/7
+    self.gastarNafta(kilometros)
+  }
+
+  method gastarNafta(kilometros) {
+    nafta = nafta - kilometros / 7
   }
 }
 
@@ -33,7 +41,15 @@ object ferrari {
   var bateria = 80
 
   method correr(kilometros) {
+    self.gastarNafta(kilometros)
+    self.gastarBateria(kilometros)
+  }
+
+  method gastarNafta(kilometros) {
     nafta = nafta - kilometros / 7
+  }
+
+  method gastarBateria(kilometros) {
     if (kilometros >= 100) {
       bateria = bateria - (kilometros - 100) / 100
     }

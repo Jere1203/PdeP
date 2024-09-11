@@ -31,3 +31,6 @@ numero `op` ...
 · Responsabilidad
 · Encapsulamiento
 · Tell, don't ask
+· Cohesión
+· Self
+· Delegación
