@@ -1,0 +1,33 @@
+Objetos: representacion de un ente computacional que exhibe comportamiento
+
+Un objeto se comunica con otro enviándole mensajes y el otro reacciona a él según su estructura.
+
+Interfaz: Conjunto de mensajes que un objeto comprende, describe el comportamiento del objeto (cómo va a reaccionar a ciertos mensajes).
+
+Estado Interno: Atributos que le corresponden a un objeto.
+
+Todos los objetos van a responder al mensaje, pero según su interfaz va a poder realizar algo o no.
+
+Método: de qué forma va a actuar el objeto cuando le envíe el mensaje
+
+    · Objeto
+        | entiende
+        ˅
+    · Mensaje
+        | comprende
+        ˅
+    · Interfaz
+    · Estado interno (puede no tener)
+    · Referencia a un objeto
+    · Efecto
+
+Sintaxis:
+objeto.mensaje(Mensaje)
+
+ref = objeto ˂---- Cambia la referencia, los objetos no cambian
+
+numero `op` ...
+
+· Responsabilidad
+· Encapsulamiento
+· Tell, don't ask
