@@ -1,0 +1,13 @@
+import tomYJerry.*
+
+test "Tom persigue a jerry" {
+  tom.correrA(jerry)
+  assert.equals(15, tom.energia())
+  assert.equals(10, tom.posicion())
+}
+
+test "Tom persigue a robotRaton" {
+  tom.correrA(robotRaton)
+  assert.equals(2, tom.energia())
+  assert.equals(12, tom.posicion())
+}
