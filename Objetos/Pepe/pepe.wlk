@@ -1,9 +1,9 @@
 object pepe {
   var property faltas = 1           //Property sirve para que Wollok me cree el setter y getter (Únicamente sirve para crear ambos)
   var property aniosAntiguedad = 1
-  var property puesto = desarrollador
-  var property bonoPresentismo = bonoPresentismoNulo
-  var property bonoResultado = bonoResultadoFijo
+  var puesto = desarrollador
+  var bonoPresentismo = bonoPresentismoNulo
+  var bonoResultado = bonoResultadoFijo
 
   method sueldo() = self.sueldoNeto() + self.bonoPresentismo() + self.bonoResultado()
 
@@ -16,6 +16,18 @@ object pepe {
   method faltas() = faltas
 
   method aniosAntiguedad() = aniosAntiguedad
+
+  method puesto(unPuesto) {
+    puesto = unPuesto
+  }
+
+  method bonoPresentismo(unBonoPresentismo) {
+    bonoPresentismo = unBonoPresentismo
+  }
+
+  method bonoResultado(unBonoResultado) {
+    bonoResultado = unBonoResultado
+  }
 
 }
 
@@ -47,7 +59,7 @@ object bonoPresentismoFaltas {
   }
 }
 
-object bonoResultadoNioqui {
+object bonoPresentismoNioqui {
   method sueldo(unEmpleado) {
     return 2 ** unEmpleado.faltas()
   }
@@ -57,7 +69,18 @@ object bonoResultadoFijo {
   method sueldo(unEmpleado){
     return 15 + unEmpleado.aniosAntiguedad()
   }
-  
+}
+
+object bonoResultadoSTI {
+  method sueldo(unEmpleado){
+    return unEmpleado.sueldoNeto() * 0.25
+  }
+}
+
+object bonoResultadoNulo {
+  method sueldo(unEmpleado) {
+    return 0
+  }
 }
 
 //PINGA

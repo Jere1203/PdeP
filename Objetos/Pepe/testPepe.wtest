@@ -1,16 +1,160 @@
 import pepe.*
 
-test "Cuando pepe es desarrollador y tiene bono presentismo nulo"{
+test "Cuando pepe es desarrollador y tiene bono presentismo nulo y bono por resultado fijo" {
   pepe.puesto(desarrollador)
   pepe.bonoPresentismo(bonoPresentismoNulo)
   pepe.bonoResultado(bonoResultadoFijo)
   assert.equals(1041, pepe.sueldo())
 }
 
-test "Cuando pepe es desarrollador y tiene bono presentismo faltas"{
+test "Cuando pepe es desarrollador y tiene bono presentismo por faltas teniendo cero faltas y bono por resultado fijo" {
   pepe.faltas(0)
   pepe.puesto(desarrollador)
   pepe.bonoPresentismo(bonoPresentismoFaltas)
   pepe.bonoResultado(bonoResultadoFijo)
   assert.equals(1141, pepe.sueldo())
+}
+
+test "Cuando pepe es desarrollador y tiene bono presentismo ñoqui sin faltas y bono por resultado fijo" {
+  pepe.faltas(0)
+  pepe.puesto(desarrollador)
+  pepe.bonoPresentismo(bonoPresentismoNioqui)
+  pepe.bonoResultado(bonoResultadoFijo)
+  assert.equals(1042, pepe.sueldo())
+}
+
+test "Cuando pepe es desarrollador y tiene bono presentismo nulo y bono sti" {
+  pepe.puesto(desarrollador)
+  pepe.bonoPresentismo(bonoPresentismoNulo)
+  pepe.bonoResultado(bonoResultadoSTI)
+  assert.equals(1281.25, pepe.sueldo())
+}
+
+test "Cuando pepe es desarrollador y tiene bono presentismo por faltas teniendo cero faltas y bono por resultado sti"{
+  pepe.faltas(0)
+  pepe.puesto(desarrollador)
+  pepe.bonoPresentismo(bonoPresentismoFaltas)
+  pepe.bonoResultado(bonoResultadoSTI)
+  assert.equals(1381.25, pepe.sueldo())
+}
+
+test "Cuando pepe es desarrollador y tiene bono presentismo ñoqui sin faltas y bono por resultado sti" {
+  pepe.faltas(0)
+  pepe.puesto(desarrollador)
+  pepe.bonoPresentismo(bonoPresentismoNioqui)
+  pepe.bonoResultado(bonoResultadoSTI)
+  assert.equals(1282.25, pepe.sueldo())
+}
+
+test "Cuando pepe es desarrollador y tiene bono presentismo nulo y bono por resultado nulo"{
+  pepe.puesto(desarrollador)
+  pepe.bonoPresentismo(bonoPresentismoNulo)
+  pepe.bonoResultado(bonoResultadoNulo)
+  assert.equals(1025, pepe.sueldo())
+}
+
+test "Cuando pepe es manager y tiene bono presentismo nulo y bono por resultado fijo" {
+  pepe.puesto(manager)
+  pepe.bonoPresentismo(bonoPresentismoNulo)
+  pepe.bonoResultado(bonoResultadoFijo)
+  assert.equals(1566, pepe.sueldo())
+}
+
+test "Cuando pepe es manager y tiene bono presentismo por faltas teniendo cero faltas y bono por resultado fijo" {
+  pepe.faltas(0)
+  pepe.puesto(manager)
+  pepe.bonoPresentismo(bonoPresentismoFaltas)
+  pepe.bonoResultado(bonoResultadoFijo)
+  assert.equals(1666, pepe.sueldo())
+}
+
+test "Cuando pepe es manager y tiene bono presentismo ñoqui sin faltas y bono por resultado fijo" {
+  pepe.faltas(0)
+  pepe.puesto(manager)
+  pepe.bonoPresentismo(bonoPresentismoNioqui)
+  pepe.bonoResultado(bonoResultadoFijo)
+  assert.equals(1567, pepe.sueldo())
+}
+
+test "Cuando pepe es manager y tiene bono presentismo nulo y bono sti" {
+  pepe.puesto(manager)
+  pepe.bonoPresentismo(bonoPresentismoNulo)
+  pepe.bonoResultado(bonoResultadoSTI)
+  assert.equals(1937.5, pepe.sueldo())
+}
+
+test "Cuando pepe es manager y tiene bono presentismo por faltas teniendo cero faltas y bono por resultado sti"{
+  pepe.faltas(0)
+  pepe.puesto(manager)
+  pepe.bonoPresentismo(bonoPresentismoFaltas)
+  pepe.bonoResultado(bonoResultadoSTI)
+  assert.equals(2037.5, pepe.sueldo())
+}
+
+test "Cuando pepe es manager y tiene bono presentismo ñoqui sin faltas y bono por resultado sti" {
+  pepe.faltas(0)
+  pepe.puesto(manager)
+  pepe.bonoPresentismo(bonoPresentismoNioqui)
+  pepe.bonoResultado(bonoResultadoSTI)
+  assert.equals(1938.5, pepe.sueldo())
+}
+
+test "Cuando pepe es manager y tiene bono presentismo nulo y bono por resultado nulo"{
+  pepe.puesto(manager)
+  pepe.bonoPresentismo(bonoPresentismoNulo)
+  pepe.bonoResultado(bonoResultadoNulo)
+  assert.equals(1550, pepe.sueldo())
+}
+
+test "Cuando pepe es gerente y tiene bono presentismo nulo y bono por resultado fijo" {
+  pepe.puesto(gerente)
+  pepe.bonoPresentismo(bonoPresentismoNulo)
+  pepe.bonoResultado(bonoResultadoFijo)
+  assert.equals(2616, pepe.sueldo())
+}
+
+test "Cuando pepe es gerente y tiene bono presentismo por faltas teniendo cero faltas y bono por resultado fijo" {
+  pepe.faltas(0)
+  pepe.puesto(gerente)
+  pepe.bonoPresentismo(bonoPresentismoFaltas)
+  pepe.bonoResultado(bonoResultadoFijo)
+  assert.equals(2716, pepe.sueldo())
+}
+
+test "Cuando pepe es gerente y tiene bono presentismo ñoqui sin faltas y bono por resultado fijo" {
+  pepe.faltas(0)
+  pepe.puesto(gerente)
+  pepe.bonoPresentismo(bonoPresentismoNioqui)
+  pepe.bonoResultado(bonoResultadoFijo)
+  assert.equals(2617, pepe.sueldo())
+}
+
+test "Cuando pepe es gerente y tiene bono presentismo nulo y bono sti" {
+  pepe.puesto(gerente)
+  pepe.bonoPresentismo(bonoPresentismoNulo)
+  pepe.bonoResultado(bonoResultadoSTI)
+  assert.equals(3250, pepe.sueldo())
+}
+
+test "Cuando pepe es gerente y tiene bono presentismo por faltas teniendo cero faltas y bono por resultado sti"{
+  pepe.faltas(0)
+  pepe.puesto(gerente)
+  pepe.bonoPresentismo(bonoPresentismoFaltas)
+  pepe.bonoResultado(bonoResultadoSTI)
+  assert.equals(3350, pepe.sueldo())
+}
+
+test "Cuando pepe es gerente y tiene bono presentismo ñoqui sin faltas y bono por resultado sti" {
+  pepe.faltas(0)
+  pepe.puesto(gerente)
+  pepe.bonoPresentismo(bonoPresentismoNioqui)
+  pepe.bonoResultado(bonoResultadoSTI)
+  assert.equals(3251, pepe.sueldo())
+}
+
+test "Cuando pepe es gerente y tiene bono presentismo nulo y bono por resultado nulo"{
+  pepe.puesto(gerente)
+  pepe.bonoPresentismo(bonoPresentismoNulo)
+  pepe.bonoResultado(bonoResultadoNulo)
+  assert.equals(2600, pepe.sueldo())
 }
