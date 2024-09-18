@@ -1,6 +1,6 @@
 {
     "workbench.iconTheme": "material-icon-theme",
     "window.autoDetectColorScheme": true,
-    "workbench.preferredDarkColorTheme": "GitHub Dark Default",
+    "workbench.preferredDarkColorTheme": "GitHub Dark",
     "workbench.preferredLightColorTheme": "GitHub Light Default"
 }
