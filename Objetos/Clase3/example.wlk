@@ -1,5 +1,5 @@
 class Recital {
-    var asientos = []
+  var asientos = #{}
   var entradasVendidas = 0
   method ventaEntradas(persona) {
     asientos.add(persona)

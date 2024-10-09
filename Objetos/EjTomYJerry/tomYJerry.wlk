@@ -33,8 +33,8 @@ object tom {
 
 
 object jerry {
-    var peso = 3
-    var posicion = 10
+    const peso = 3
+    const posicion = 10
   method velocidad() {
     return 10 - self.peso()
   }
@@ -49,8 +49,8 @@ object jerry {
 }
 
 object robotRaton {
-  var velocidad = 8
-  var posicion = 12
+  const velocidad = 8
+  const posicion = 12
   method posicion() {
     return posicion
   }
