@@ -1,0 +1,7 @@
+import vivaLaliCarajo.*
+
+const theErasTour = new Concierto(artista = "Taylor", fecha = "20/10/2025", asientosPlateaBaja = 10, filasPlateaBaja = 15, recinto = "estadio", asientosPlateaAlta = 25, filasPlateaAlta = 5, asientosPlateaPreferencial = 5, filasPlateaPreferencial = 5, capacidadCampo = 1000)
+
+test "Taylor hace un show para 1300 personas" {
+  assert.equals(1300, theErasTour.capacidadConcierto())
+}
