@@ -8,12 +8,9 @@ class Funcion{
   const property asientosPlateaPreferencial
   const property filasPlateaPreferencial
 
-  const asientosLibres = []
-  method estaAgotada() {
-    asientosLibres.isEmpty()
-  }
+  const asientosOcupados = []
   method asignarAsiento(unaPersona) {
-    asientosLibres.add(unaPersona)
+    asientosOcupados.add(unaPersona)
   }
   method reasignarAsiento(unaPersona, otraPersona) {
     /*Busca el asiento de "unaPersona" y lo cambia con el de "otraPersona"*/
@@ -31,6 +28,9 @@ class Concierto inherits Funcion {
 
   const property recinto
 
+  method estaAgotado(){
+    asientosOcupados.size() == self.capacidadConcierto()
+  }
 
   method capacidadConcierto(){
     if (recinto == "estadio"){
@@ -48,6 +48,10 @@ class Obra inherits Funcion {
   const property director
   const property fechaApertura
   const property horaApertura
+
+  method estaAgotado(){
+    asientosOcupados.size() == self.capacidadObra()
+  }
 
   method capacidadObra() {
     return self.capacidadPlateaBaja() + self.capacidadPlateaAlta() + self.capacidadPlateaPreferencial()
