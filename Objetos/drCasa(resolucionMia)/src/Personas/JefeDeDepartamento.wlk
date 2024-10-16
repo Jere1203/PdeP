@@ -7,7 +7,6 @@ class JefeDeDepartamento inherits Medico (dosis = 0){
   }
 
   override method darMedicamento(unaPersona) {
-    super(unaPersona)
     subordinados.anyOne().darMedicamento(unaPersona)
   }
 }
