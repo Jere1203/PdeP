@@ -1,9 +1,28 @@
-import example.pepita
+import src.Enfermedades.EnfermedadInfecciosa.*
+import src.Enfermedades.EnfermedadAutoinmune.*
+import src.Enfermedades.Enfermedad.*
 
-describe "group of tests for pepita" {
+import src.Personas.JefeDeDepartamento.*
+import src.Personas.Medico.*
+import src.Personas.Persona.*
 
-  test "pepita has initial energy" {
-    assert.equals(100, pepita.energy())
+describe "Dr Casa - Temporada 1" {
+  const malaria500 = new EnfermedadInfecciosa(celulasAmenazadas = 500)
+  const otitis100  = new EnfermedadInfecciosa(celulasAmenazadas = 100)
+  const lupus10000 = new EnfermedadAutoinmune(celulasAmenazadas = 10000)
+  const malaria800 = new EnfermedadInfecciosa(celulasAmenazadas = 800)
+
+  const logan = new Persona(temperatura = 36, celulas = 3000000)
+  const frank = new Persona(temperatura = 36, celulas = 3500000)
+
+  method initialize(){
+    logan.contraerEnfermedad(malaria500)
+    logan.contraerEnfermedad(otitis100)
+    logan.contraerEnfermedad(lupus10000)
+
+    frank.contraerEnfermedad(malaria800)
   }
-
+  test "Frank contrae malaria800"{
+    assert.that(frank.tieneEnfermedad(malaria800))
+  }
 }
