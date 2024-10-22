@@ -2,16 +2,19 @@ import src.Artistas.*
 import src.Peliculas.*
 
 class IMPdeP {
+    const elenco = #{}
+    const peliculas = #{}
+
     method artistaConMejorPaga(unaPelicula){
-        return unaPelicula.elenco.max{ actor => actor.sueldo() }
+        return elenco.max{ actor => actor.sueldo() }
     }
 
-    method peliculasEconomicas(unasPeliculas) {
-        return unasPeliculas.filter {unaPelicula => unaPelicula.presupuesto() < 500000}
+    method peliculasEconomicas() {
+        return peliculas.filter{ pelicula => pelicula.esPeliculaEconomica()}
     }
 
-    method gananciasPeliculasEconomicas(unasPeliculas) {
-        return self.peliculasEconomicas(unasPeliculas).ganancias().sum()    
+    method gananciasPeliculasEconomicas() {
+        return peliculas.filter{ pelicula => pelicula.esPeliculaEconomica() }.sum{ pelicula => pelicula.ganancias() }   
     }
 
     method recategorizar(unArtista) {

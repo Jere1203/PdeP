@@ -46,4 +46,8 @@ class Pelicula {
     method sumatoriaDeSueldos() {
         return elenco.forEach {actor => actor.sueldo()}
     }
+
+    method esPeliculaEconomica(){
+        self.presupuesto() < 500000
+    }
 }
