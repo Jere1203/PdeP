@@ -1,0 +1,11 @@
+import src.Cliente.*
+import src.Gameflix.*
+import src.Juego.*
+import src.Suscripcion.*
+describe "Tests de gameflix" {
+  const carlitos = new Cliente(suscripcion = premium, saldo = 20, humor = 30)
+  test "Carlitos no puede pagar la suscripcion premium y se lo pasa a la suscripcion base" {
+    carlitos.pagarSuscripcion()
+    assert.equals(prueba, carlitos.suscripcion())
+  }
+}
