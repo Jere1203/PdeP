@@ -1238,3 +1238,11 @@
 {"level":"info","message":"⌛ Validating Objetos/Clase4/src/Personas/Persona.wlk","timeElapsed":249,"timestamp":"2024-10-28T04:20:26.224Z"}
 {"level":"info","message":"⌛ Validating Objetos/Pepe/pepe.wlk","timeElapsed":298,"timestamp":"2024-10-28T04:20:26.522Z"}
 {"level":"info","message":"⌛ Validating Objetos/Pepe/testPepe.wtest","timeElapsed":276,"timestamp":"2024-10-28T04:20:26.798Z"}
+{"level":"info","message":"⌛ Validating Objetos/Clase4/test/testDrCasa.wtest","timeElapsed":314,"timestamp":"2024-10-28T04:20:27.113Z"}
+{"level":"info","message":"⌛ Validating Objetos/EjTomYJerry/tomYJerryTest.wtest","timeElapsed":291,"timestamp":"2024-10-28T04:20:27.405Z"}
+{"level":"info","message":"⌛ Validating Objetos/Clase6PracticaParcial/tests/testExample.wtest","timeElapsed":356,"timestamp":"2024-10-28T04:20:27.762Z"}
+{"level":"info","message":"⌛ Validating Objetos/Clase6PracticaParcial/src/Jugador.wlk","timeElapsed":293,"timestamp":"2024-10-28T04:20:28.055Z"}
+{"level":"info","message":"⌛ Validating Objetos/lali%28visto%20en%20clase%29/testExample.wtest","timeElapsed":278,"timestamp":"2024-10-28T04:20:28.334Z"}
+{"level":"info","message":"⌛ Validating Objetos/Clase6PracticaParcial/src/Nave.wlk","timeElapsed":316,"timestamp":"2024-10-28T04:20:28.651Z"}
+{"level":"info","message":"⌛ Validating Objetos/drCasa%28resolucionMia%29/test/testExample.wtest","timeElapsed":305,"timestamp":"2024-10-28T04:20:28.957Z"}
+{"level":"info","message":"⌛ Validating Objetos/lali%28visto%20en%20clase%29/lali.wlk","timeElapsed":264,"timestamp":"2024-10-28T04:20:29.220Z"}
