@@ -1,5 +1,4 @@
-.vscode
-log
-.gitignore
-key
-key.pub
+PdeP/log
+PdeP/.vscode
+PdeP/key
+PdeP/key.pub
