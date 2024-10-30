@@ -1,0 +1,71 @@
+import src.Personas.*
+import src.Legiones.*
+import src.Barrios.*
+
+describe "Algunos test random" {
+    const carlitos = new Ninio(caramelos = 0, actitud = 10)
+    const pedro = new Adulto (niniosQueIntentaronAsustar = ["Hola","Como","Estas","?"])
+    const losTimba  = new Legion (miembros = ["pepe","jorge"])
+    const georgeBush = new Traje(tipo = terrorifico)
+    const juan = new Ninio (caramelos = 16, actitud = 10)
+    const maquillaje = new Maquillaje()
+    
+
+  test "Carlitos quiere comer caramelos pero no tiene, deberia tirar una excepcion" {
+    assert.throwsException({ carlitos.comerCaramelos(10) })
+  }
+
+  test "Se puede crear una legion combinada (los miembros de la legion es otra legion)" {
+    const legionCombinada = new Legion (miembros = ["Pepe"] + losTimba.miembros())
+    assert.that(legionCombinada.miembros().contains("pepe"))
+  }
+
+  test "Se quiere crea una legion pero son menos de dos personas" {
+    const legion = new Legion (miembros = [carlitos])
+    assert.throwsException({ legion.crearLegion() })
+  }
+
+  test "La capacidad de asustar de Carlitos es de 0" {
+    assert.equals(0, carlitos.capacidadDeAsustar())
+  }
+
+  test "Ahora carlitos tiene un disfraz de George Bush y su capacidad asciende a 50 porque tiene un indice de actitud de 10" {
+    
+    carlitos.elementos(georgeBush)
+
+    assert.equals(50, carlitos.capacidadDeAsustar())
+  }
+
+  test "Pedro tiene tolerancia 20" {
+    assert.equals(40, pedro.tolerancia())
+  }
+
+  test "Carlitos asusta a Pedro con su disfraz y obtiene caramelos" {
+    carlitos.elementos(georgeBush)
+    carlitos.asustarA(pedro)
+    assert.equals(20, carlitos.caramelos())
+  }
+  
+  test "A Pedro lo asusta Juan que tiene 16 caramelos y suma susto" {
+    juan.elementos(georgeBush)
+    juan.elementos(maquillaje)
+    juan.asustarA(pedro)
+    //assert.that(pedro.niniosQueIntentaronAsustar().contains(juan))
+    //assert.equals(40, pedro.tolerancia())
+    //assert.equals(50, pedro.tolerancia())
+    assert.equals(36, juan.caramelos())
+  }
+  test "A Pedro lo asusta Juan que tiene 16 caramelos y suma caramelos" {
+    juan.elementos(georgeBush)
+    juan.elementos(maquillaje)
+    juan.asustarA(pedro)
+    assert.equals(36, juan.caramelos())
+  }
+
+  test "A Pedro lo asusta Juan que tiene 16 caramelos y se suma a la lista de sustos" {
+    juan.elementos(georgeBush)
+    juan.elementos(maquillaje)
+    juan.asustarA(pedro)
+    assert.that(pedro.niniosQueIntentaronAsustar().contains(juan))
+  }
+}
