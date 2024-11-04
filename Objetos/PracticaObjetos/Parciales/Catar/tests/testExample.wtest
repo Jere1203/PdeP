@@ -1,0 +1,38 @@
+import src.Cocineros.*
+import src.Platos.*
+
+describe "Catar 2022" {
+
+  const mongondo = new Principal(cocinero = jorge, cantidadAzucar = 0, esBonito = true)
+  const jorge = new Cocinero(especialidad = new Chef(caloriasMaximas = 500))
+  const juan = new Cocinero(especialidad = new SousChef(caloriasMaximas = 300))
+  const pedro = new Cocinero(especialidad = new Pastelero(dulzorDeseado = 100))
+
+  test "El plato Mongondo tiene 100 calorias"  {
+    assert.equals(100, mongondo.calorias())
+  }
+
+  test "El plato Mongondo es catado por Jorge y le dio 10 puntos" {
+    assert.equals(10, jorge.catar(mongondo))
+  }
+
+  test "Jorge pasa de chef a pastelero" {
+    const especialidadDeJorge = new Pastelero(dulzorDeseado = 100)
+    jorge.especialidad(especialidadDeJorge)
+    assert.that(jorge.especialidad() == especialidadDeJorge)
+  }
+
+  test "Pastelero califica plato de jorge y le pone 2" {
+    const platoDeJorge = jorge.cocinar()
+    assert.equals(10 ,pedro.catar(platoDeJorge))
+  }
+
+  test "Pastelero califica plato de juan y le pone 0 porque no tiene azucar"{
+    const platoDeJuan = juan.cocinar()
+    assert.equals(0, pedro.catar(platoDeJuan))
+  }
+  test "Pastelero califica plato de pedro y le pone un 6" {
+    const platoDePedro = pedro.cocinar()
+    assert.equals(6, pedro.catar(platoDePedro))
+  }
+}
