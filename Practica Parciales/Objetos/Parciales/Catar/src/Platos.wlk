@@ -3,24 +3,24 @@ class Plato {
     const cocinero
 
     method calorias() = (3 * cantidadAzucar) + 100
-
+    method esBonito()
     method cocinero() = cocinero
 
     method cantidadAzucar() = cantidadAzucar
 }
 
 class Entrada inherits Plato (cantidadAzucar = 0) {
-    method esBonito() = true
+    override method esBonito() = true
 }
 
 class Principal inherits Plato {
     const esBonito
 
-    method esBonito() = esBonito
+    override method esBonito() = esBonito
 }
 
 class Postre inherits Plato (cantidadAzucar = 120) {
     const cantidadColores
 
-    method esBonito() = cantidadColores > 3
+    override method esBonito() = cantidadColores > 3
 }

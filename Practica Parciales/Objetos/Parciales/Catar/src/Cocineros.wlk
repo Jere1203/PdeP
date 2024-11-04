@@ -2,7 +2,7 @@ import Platos.*
 class Cocinero{
     var especialidad
 
-    method cocinar() = especialidad.cocinar()
+    method cocinar() = especialidad.cocinar(self)
 
     method catar(unPlato) = especialidad.calificar(unPlato)
 
@@ -11,8 +11,6 @@ class Cocinero{
     }
 
     method especialidad() = especialidad
-
-    method es(unaEspecialidad) = self.especialidad() == unaEspecialidad
 
     method participarEn(unTorneo) {
         const plato = self.cocinar()
@@ -29,7 +27,7 @@ class Pastelero  {
  
     method dulzorDeseado() = dulzorDeseado
 
-    method cocinar() = new Postre(cocinero = self, cantidadColores = dulzorDeseado / 50)
+    method cocinar(unCocinero) = new Postre(cocinero = unCocinero, cantidadColores = dulzorDeseado / 50)
 }
 
 class Chef {
@@ -39,23 +37,17 @@ class Chef {
         if (self.esPlatoDiez(unPlato)) {
             return 10
         } else {
-            return 0
+            self.malaCalificacion(unPlato)
         }
     }
 
     method esPlatoDiez(unPlato) = unPlato.esBonito() and unPlato.calorias() < caloriasMaximas
-
-    method cocinar() = new Principal(cocinero = self, esBonito = true, cantidadAzucar = caloriasMaximas)
+    method malaCalificacion(_unPlato) = 0
+    method cocinar(unCocinero) = new Principal(cocinero = unCocinero, esBonito = true, cantidadAzucar = caloriasMaximas)
 }
 
 class SousChef inherits Chef {
-    override method calificar(unPlato) {
-        if (self.esPlatoDiez(unPlato)) {
-            return 10
-        } else {
-            return 6.max(unPlato.calorias() / 100)
-        }
-    }
+    override method malaCalificacion(unPlato) = 6.max(unPlato.calorias() / 100)
 
-    override method cocinar() = new Entrada(cocinero = self)
+    override method cocinar(unCocinero) = new Entrada(cocinero = unCocinero)
 }

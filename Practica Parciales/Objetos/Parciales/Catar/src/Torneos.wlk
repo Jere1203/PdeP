@@ -1,5 +1,6 @@
 class Torneo {
     const participantes = #{} //Los participantes son los platos de los chefs, no los chefs per se(?
+    const catadores = #{}
 
     method participantes(unParticipante) {
         participantes.add(unParticipante)
@@ -11,7 +12,7 @@ class Torneo {
         mejorPlato.chef()
     }
 
-    method calificar(unPlato) = participantes.sum { unCatador => unCatador.catar(unPlato) }
+    method calificar(unPlato) = catadores.sum { unCatador => unCatador.catar(unPlato) }
 
     method verificarParticipantes() {
         if (participantes.isEmpty()) {
