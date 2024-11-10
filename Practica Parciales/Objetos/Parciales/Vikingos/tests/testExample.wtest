@@ -1,0 +1,33 @@
+import src.Vikingos.*
+import src.Expediciones.*
+
+describe "Parcial Objetos-Vikingos" {
+    const carlitos = new Granjero(hectareas = 4, cantidadHijos = 2 , casta = jarl, botin = 0)
+    const expedicionJijo = new Expedicion(objetivos = [aldeaJijo], integrantes = [])
+    const aldeaJijo = new Aldea(cantidadCrucifijos = 10)
+    const expedicionJijazo = new Expedicion(objetivos = [capitalJijazo], integrantes = [])
+    const capitalJijazo = new Capital(defensores = 10, factorRiqueza = 2)
+    const ragnar = new Soldado(casta = karl, botin = 0, asesinatos = 0, armas = 0)
+
+
+  test "Un vikingo quiere subirse a una expedicion pero no puede" {
+    assert.throwsException({ expedicionJijazo.subir(carlitos) })
+  }
+
+  test "La expedicion a aldeajijo no vale la pena" {
+    assert.that(not expedicionJijo.valeLaPena())
+  }
+  test "La expedicion a capitalJijazo vale la pena" {
+    assert.that(expedicionJijazo.valeLaPena())
+  }
+
+  test "Ragnar escala a Thrall" {
+    ragnar.ascender()
+    assert.that(ragnar.perteneceA(thrall))
+  }
+  test "Expedicion jijazo invade a aldeaJijo y carlitos gana 10 de oro" {
+    expedicionJijo.subir(carlitos)
+    expedicionJijo.realizar()
+    assert.equals(10, carlitos.botin())
+  }
+}
