@@ -5,11 +5,19 @@ class Movimiento {
 
     method decrementarUsosDisponibles() {
         usosDisponibles -= 1
+        0.max(usosDisponibles)
     }
 
     method usarMovimientoEntre(unPokemon, otroPokemon) {
+        self.verificarUsosDisponibles()
         self.decrementarUsosDisponibles()
         tipoMovimiento.afectarA(unPokemon, otroPokemon)
+    }
+
+    method verificarUsosDisponibles() {
+        if (usosDisponibles == 0) {
+            throw new DomainException (message = "No le quedan usos al movimiento")
+        }
     }
 
     method leQuedanUsos() = usosDisponibles > 0
