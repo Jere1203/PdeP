@@ -15,7 +15,7 @@ class Movimiento {
     method leQuedanUsos() = usosDisponibles > 0
 }
 
-class Curativo {
+class Curativo inherits Movimiento {
     const puntosDeCuracion
 
     method afectarA(unPokemon, _otroPokemon) {
@@ -24,7 +24,7 @@ class Curativo {
     method poder() = puntosDeCuracion
 }
 
-class Danino {
+class Danino inherits Movimiento {
     const danio
 
     method afectarA(_unPokemon, otroPokemon) {
@@ -33,21 +33,21 @@ class Danino {
     method poder() = 2 * danio
 }
 
-class Especial {
+class Especial inherits Movimiento {
     const tipo
 
     method afectarA(_unPokemon, otroPokemon) = tipo.afectarA(otroPokemon)
     method poder() = tipo.poder()
 }
 
-object suenio {
+class Suenio {
     method poder() =  50
     method afectarA(otroPokemon) {
         otroPokemon.condicion(dormido)
     }
 }
 
-object paralisis {
+class Paralisis {
     method poder() = 30
     method afectarA(otroPokemon) {
         otroPokemon.condicion(paralizado)
@@ -56,9 +56,10 @@ object paralisis {
 
 class Confusion {
     const duracionConfusion
-
+    
+    method poder() = 40 * duracionConfusion
     method afectarA(otroPokemon) {
       otroPokemon.turnosConfundido(duracionConfusion)
-      otroPokemon.condicion(confundido)
+      otroPokemon.condicion(new Confundido(turnosConfundido = duracionConfusion))
     }
 }
