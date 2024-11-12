@@ -2,7 +2,7 @@ import src.Actividades.*
 
 class Filosofo {
     const nombre
-    const honorificos = []
+    const honorificos = #{}
     var nivelIluminacion
     var diasVividos
     const actividades = []

@@ -33,19 +33,18 @@ class Partido {
     const argumentos
     const filosofo
 
-    method filosofo() = filosofo
+    method esBueno() = self.tieneBuenosArgumentos() and filosofo.estaEnLoCorrecto()
 
-    method mitadDeArgumentosEnriquecedores() = self.argumentosEnriquecedores() >= argumentos.size()
+    method tieneBuenosArgumentos() = self.argumentosEnriquecedores() >= self.cantidadArgumentos() / 2
 
-    method argumentosEnriquecedores() = argumentos.filter { argumento => argumento.esEnriquecedor() }.size()
+    method argumentosEnriquecedores() = argumentos.count { argumento => argumento.esEnriquecedor() }
 
-    method filosofoEstaEnLoCorrecto() = filosofo.estaEnLoCorrecto()
+    method cantidadArgumentos() = argumentos.size()
 }
 
 class Discusion {
-    method esBuenaDiscusionCon(unPartido, otroPartido) = self.mitadDeArgumentosEnriquecedores(unPartido, otroPartido) and self.ambosFilosofosCorrectos(unPartido, otroPartido)
+    const partido1
+    const partido2
 
-    method mitadDeArgumentosEnriquecedores(unPartido, otroPartido) = unPartido.mitadDeArgumentosEnriquecedores() and otroPartido.mitadDeArgumentosEnriquecedores()
-
-    method ambosFilosofosCorrectos(unPartido, otroPartido) = unPartido.filosofoEnLoCorrecto() and otroPartido.filosofoEnLoCorrecto()
+    method esBuenaDiscusion() = partido1.esBueno() and partido2.esBueno()
 }
